@@ -16,10 +16,14 @@ class Calculator:
         }
 
     def evaluate(self, expression):
-        if not expression or expression.isspace():
-            return None
+        if not expression or expression.strip() == "":
+            return None  # Or raise a specific error like ValueError("Expression cannot be empty or whitespace only")
         tokens = expression.strip().split()
-        return self._evaluate_infix(tokens)
+        result = self._evaluate_infix(tokens)
+        # If the result is a whole number, convert it to an integer
+        if isinstance(result, float) and result.is_integer():
+            return int(result)
+        return result
 
     def _evaluate_infix(self, tokens):
         values = []
@@ -58,4 +62,9 @@ class Calculator:
 
         b = values.pop()
         a = values.pop()
+        
+        # Handle division by zero
+        if operator == '/' and b == 0:
+            raise ValueError("division by zero")
+            
         values.append(self.operators[operator](a, b))

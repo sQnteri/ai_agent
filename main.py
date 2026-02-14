@@ -53,9 +53,11 @@ def main():
                 if not function_call_result.parts[0].function_response.response:
                     raise Exception("No function")
                 function_results.append(function_call_result.parts[0])
-                messages.append(types.Content(role="user", parts=function_results))
                 if args.verbose == True:
                     print(f"-> {function_call_result.parts[0].function_response.response}")
+                    
+            messages.append(types.Content(role="user", parts=function_results))
+            
         else:
             print(response.text)
             break
