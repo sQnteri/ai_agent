@@ -1,4 +1,5 @@
 import os
+from google.genai import types
 
 def get_files_info(working_directory, directory="."):
     working_dir_abs = os.path.abspath(working_directory)
@@ -16,9 +17,23 @@ def get_files_info(working_directory, directory="."):
             t = item.is_dir() 
             s = item.stat().st_size
             dir_string += f"   - {item.name}: file_size={s} bytes, is_dir={t}\n"
-    except Error:
+    except Exception:
         return "   Error: couldn't scan directory"
     
     return dir_string
 
+
+schema_get_files_info = types.FunctionDeclaration(
+    name="get_files_info",
+    description="Lists files in a specified directory relative to the working directory, providing file size and directory status",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="Directory path to list files from, relative to the working directory (default is the working directory itself)",
+            ),
+        },
+    ),
+)
 
